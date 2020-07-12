@@ -8,31 +8,113 @@
 import Foundation
 
 struct SetGameModel {
-    var cards: [Card]
+    private(set) var cards: [Card]
     private var allCards: [Card]
     private var nextCardIndex: Int
+    private var choosenCards: [Card]
     
+    // choose a card
     mutating func choose(card: Card) {
-        print(card)
+        // if we have 3 choosen cards before, deselect all cards before choose the new card
+        if choosenCards.count == 3 {
+            for card in choosenCards {
+                cards[cards.firstIndex(matching: card)!].isSelected = false
+            }
+            choosenCards = Array<Card>()
+        }
+        
+        // find the choosen card index in current cards
+        let indexOfSelectedCard = cards.firstIndex(matching: card)!
+        
+        // if the choosen card is not selected
+        if !cards[indexOfSelectedCard].isSelected {
+            // mark the card selected
+            choosenCards.append(card)
+            
+            // toggle the card select state
+            cards[indexOfSelectedCard].isSelected.toggle()
+            
+            // if the choosen card is the third choosen card
+            if choosenCards.count == 3 {
+                print("Is it a match? \(isMatch(cardA: choosenCards[0], cardB: choosenCards[1], cardC: choosenCards[2]))")
+                if isMatch(cardA: choosenCards[0], cardB: choosenCards[1], cardC: choosenCards[2]) {
+                    matchedCard(matchedCards: choosenCards)
+                    choosenCards = Array<Card>()
+                }
+            }
+        } else {
+            choosenCards.remove(at: choosenCards.firstIndex(matching: card)!)
+            // toggle the card select state
+            cards[indexOfSelectedCard].isSelected.toggle()
+        }
     }
     
+    mutating func matchedCard(matchedCards: [Card]) {
+        if (cards.count == 3) {
+            print("Finished Game")
+        }
+        for card in matchedCards {
+            // if more cards to deal and current deck will be less than 12 cards, replace matched card with new card
+            if nextCardIndex < allCards.count && cards.count == 12 {
+                cards[cards.firstIndex(matching: card)!] = allCards[nextCardIndex]
+                nextCardIndex += 1
+            } else {
+                cards.remove(at: cards.firstIndex(matching: card)!)
+            }
+        }
+        print("matched \(cards.count)")
+    }
+
     mutating func deal() {
-        if nextCardIndex + 3 < allCards.count {
+        if nextCardIndex + 2 < allCards.count {
             for index in (nextCardIndex..<nextCardIndex+3) {
                 cards.append(allCards[index])
             }
             nextCardIndex += 3
+        }
+        print("deal \(cards.count)")
+    }
+    
+    private func isMatch(cardA: Card, cardB: Card, cardC: Card) -> Bool {
+        if !isASet(a: cardA.number, b: cardB.number, c: cardC.number) {
+            return false
+        } else if !isASet(a: cardA.color, b: cardB.color, c: cardC.color) {
+            return false
+        } else if !isASet(a: cardA.shape, b: cardB.shape, c: cardC.shape) {
+            return false
+        } else if !isASet(a: cardA.shading, b: cardB.shading, c: cardC.shading) {
+            return false
+        } else {
+            return true
+        }
+    }
+    
+    private func isASet(a: CardFeature, b: CardFeature, c: CardFeature) -> Bool {
+        let types = [a, b, c]
+        var a = 0, b = 0, c = 0
+        for type in types {
+            switch type {
+            case .featureA: a += 1
+            case .featureB: b += 1
+            case .featureC: c += 1
+            }
+        }
+        if (a == 2 || b == 2 || c == 2) {
+            return false
+        } else {
+            return true
         }
     }
     
     init() {
         cards = Array<Card>()
         allCards = Array<Card>()
+        choosenCards = Array<Card>()
         nextCardIndex = 12
-        for number in CardNumber.allCases {
-            for color in CardColor.allCases {
-                for shape in CardShape.allCases {
-                    for shading in CardShading.allCases {
+        for number in CardFeature.allCases {
+            for color in CardFeature.allCases {
+                for shape in CardFeature.allCases {
+                    for shading in CardFeature.allCases {
                         allCards.append(Card(number: number, color: color, shape: shape, shading: shading))
                     }
                 }
@@ -40,29 +122,20 @@ struct SetGameModel {
         }
         allCards.shuffle()
         cards = Array(allCards[0..<nextCardIndex])
+        print("new \(cards.count)")
     }
     
     struct Card: Identifiable {
-        var number: CardNumber
-        var color: CardColor
-        var shape: CardShape
-        var shading: CardShading
+        var number: CardFeature
+        var color: CardFeature
+        var shape: CardFeature
+        var shading: CardFeature
         var id = UUID()
+        var isMatched: Bool = false
+        var isSelected: Bool = false
     }
     
-    enum CardNumber: CaseIterable {
-        case one, two, three
-    }
-    
-    enum CardColor: CaseIterable {
-        case green, red, blue
-    }
-    
-    enum CardShape: CaseIterable {
-        case dimond, squiggle, capsule
-    }
-    
-    enum CardShading: CaseIterable {
-        case solid, striped, open
+    enum CardFeature: CaseIterable {
+        case featureA, featureB, featureC
     }
 }

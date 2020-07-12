@@ -24,15 +24,17 @@ struct SetGameCardGrid<Item, ItemView>: View where Item: Identifiable, ItemView:
         var bestCols = 1
         var smallestVariance: Double?
         let desiredAspectRatio: Double = abs(Double(size.width/size.height))
-        for cols in 1...itemCount {
-            let rows = (itemCount / cols) + (itemCount % cols > 0 ? 1 : 0)
-            if (rows - 1) * cols < itemCount {
-                let itemAspectRatio = (5/6) * (Double(cols)/Double(rows))
-                let variance = itemAspectRatio - desiredAspectRatio
-                if smallestVariance == nil || variance < smallestVariance! {
-                    if variance > 0 {
-                        smallestVariance = variance
-                        bestCols = cols
+        if itemCount > 0 {
+            for cols in 1...itemCount {
+                let rows = (itemCount / cols) + (itemCount % cols > 0 ? 1 : 0)
+                if (rows - 1) * cols < itemCount {
+                    let itemAspectRatio = (5/6) * (Double(cols)/Double(rows))
+                    let variance = itemAspectRatio - desiredAspectRatio
+                    if smallestVariance == nil || variance < smallestVariance! {
+                        if variance > 0 {
+                            smallestVariance = variance
+                            bestCols = cols
+                        }
                     }
                 }
             }
@@ -44,13 +46,13 @@ struct SetGameCardGrid<Item, ItemView>: View where Item: Identifiable, ItemView:
         GeometryReader { geometry in
             VStack {
                 Spacer()
-                LazyVGrid(columns: getColumns(itemCount: items.count, in: geometry.size), spacing: 10) {
-                    ForEach(items) { item in
+                LazyVGrid(columns: getColumns(itemCount: items.count, in: geometry.size), spacing: 8) {
+                    ForEach(items, id: \.id) { item in
                         viewForItem(item)
                     }
                 }
                 Spacer()
-            }.padding()
+            }.padding(8)
         }
     }
 }

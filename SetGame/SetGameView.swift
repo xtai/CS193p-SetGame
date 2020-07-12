@@ -15,6 +15,7 @@ struct SetGameView: View {
             HStack {
                 Text("Set Game").font(.title)
                 Spacer()
+                Text("\(game.cards.count)")
                 Button(action: {withAnimation (.easeInOut) {
                         game.deal()
                     }
