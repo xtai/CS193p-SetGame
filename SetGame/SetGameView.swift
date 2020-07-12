@@ -15,19 +15,33 @@ struct SetGameView: View {
             HStack {
                 Text("Set Game").font(.title)
                 Spacer()
-                Text("\(game.cards.count)")
-                Button(action: {withAnimation (.easeInOut) {
+                Button(action: {
+                    withAnimation (.easeInOut) {
                         game.deal()
                     }
                 }, label: {
                     Text("Deal 3 Cards")
                 })
-                Button(action: {withAnimation (.easeInOut) {
+                Button(action: {
+                    withAnimation (.easeInOut) {
                         game.new()
                     }
                 }, label: {
                     Text("New Game")
                 })
+            }.padding()
+            HStack {
+                Text("In View: \(game.cards.count)")
+                Text("Remaining: \(game.remainingCards)")
+                Spacer()
+                Button(action: {
+                    withAnimation (.easeInOut) {
+                        game.hint()
+                    }
+                }, label: {
+                    Text("Hint")
+                })
+                Text("Matches: \(game.matchesInView)")
             }.padding()
             SetGameCardGrid(game.cards) { card in
                 SetGameCardView(card: card).onTapGesture {

@@ -9,8 +9,11 @@ import Foundation
 
 struct SetGameModel {
     private(set) var cards: [Card]
+    private(set) var matchedIndices: [[Int]] = [[]]
+    private(set) var nextCardIndex: Int
+    
+    // TODO: find a better solution here for matched card and in view cards
     private var allCards: [Card]
-    private var nextCardIndex: Int
     private var choosenCards: [Card]
     
     // choose a card
@@ -38,7 +41,7 @@ struct SetGameModel {
             if choosenCards.count == 3 {
                 print("Is it a match? \(isMatch(cardA: choosenCards[0], cardB: choosenCards[1], cardC: choosenCards[2]))")
                 if isMatch(cardA: choosenCards[0], cardB: choosenCards[1], cardC: choosenCards[2]) {
-                    matchedCard(matchedCards: choosenCards)
+                    saveMatchedCard(matchedCards: choosenCards)
                     choosenCards = Array<Card>()
                 }
             }
@@ -49,11 +52,15 @@ struct SetGameModel {
         }
     }
     
-    mutating func matchedCard(matchedCards: [Card]) {
+    // TODO: mark instead of remove matched cards
+    private mutating func saveMatchedCard(matchedCards: [Card]) {
         if (cards.count == 3) {
             print("Finished Game")
         }
         for card in matchedCards {
+            if cards[cards.firstIndex(matching: card)!].isHinted {
+                cards[cards.firstIndex(matching: card)!].isHinted = false
+            }
             // if more cards to deal and current deck will be less than 12 cards, replace matched card with new card
             if nextCardIndex < allCards.count && cards.count == 12 {
                 cards[cards.firstIndex(matching: card)!] = allCards[nextCardIndex]
@@ -62,16 +69,18 @@ struct SetGameModel {
                 cards.remove(at: cards.firstIndex(matching: card)!)
             }
         }
+        matchedIndices = findMatchIndices()
         print("matched \(cards.count)")
     }
 
-    mutating func deal() {
+    mutating func dealNewCards() {
         if nextCardIndex + 2 < allCards.count {
             for index in (nextCardIndex..<nextCardIndex+3) {
                 cards.append(allCards[index])
             }
             nextCardIndex += 3
         }
+        matchedIndices = findMatchIndices()
         print("deal \(cards.count)")
     }
     
@@ -87,6 +96,31 @@ struct SetGameModel {
         } else {
             return true
         }
+    }
+    
+    // FIXME: to have better hints iterator, using a closure?
+    mutating func hint() {
+        if matchedIndices.count > 0 {
+            for cardIndex in matchedIndices[0] {
+                cards[cardIndex].isHinted = true
+            }
+        }
+    }
+    
+    // TODO: find a more effiectent algorithm here
+    private func findMatchIndices() -> Array<Array<Int>> {
+        var matchSets = Array<Array<Int>>()
+        let count = cards.count
+        for indexA in (0..<(count - 2)) {
+            for indexB in ((indexA + 1)..<(count - 1)) {
+                for indexC in ((indexB + 1)..<count) {
+                    if (isMatch(cardA: cards[indexA], cardB: cards[indexB], cardC: cards[indexC])) {
+                        matchSets.append([indexA, indexB, indexC])
+                    }
+                }
+            }
+        }
+        return matchSets
     }
     
     private func isASet(a: CardFeature, b: CardFeature, c: CardFeature) -> Bool {
@@ -122,6 +156,7 @@ struct SetGameModel {
         }
         allCards.shuffle()
         cards = Array(allCards[0..<nextCardIndex])
+        matchedIndices = findMatchIndices()
         print("new \(cards.count)")
     }
     
@@ -133,6 +168,7 @@ struct SetGameModel {
         var id = UUID()
         var isMatched: Bool = false
         var isSelected: Bool = false
+        var isHinted: Bool = false
     }
     
     enum CardFeature: CaseIterable {

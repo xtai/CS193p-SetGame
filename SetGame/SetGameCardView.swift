@@ -37,11 +37,16 @@ struct SetGameCardView: View {
                         .stroke(lineWidth: geo.size.height * 0.02)
                         .padding(geo.size.height * 0.01)
                         .foregroundColor(.accentColor)
-                } else if card.isMatched {
+                } else if card.isHinted {
                     RoundedRectangle(cornerRadius: geo.size.height * 0.05)
                         .stroke(lineWidth: geo.size.height * 0.02)
                         .padding(geo.size.height * 0.01)
                         .foregroundColor(.red)
+                } else if card.isMatched {
+                    RoundedRectangle(cornerRadius: geo.size.height * 0.05)
+                        .stroke(lineWidth: geo.size.height * 0.02)
+                        .padding(geo.size.height * 0.01)
+                        .foregroundColor(.green)
                 } else {
                     RoundedRectangle(cornerRadius: geo.size.height * 0.05)
                         .stroke(lineWidth: geo.size.height * 0.01)

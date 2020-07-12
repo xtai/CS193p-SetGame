@@ -20,6 +20,16 @@ class SetGameViewModel: ObservableObject {
         return game.cards
     }
     
+    var matchesInView: Int {
+        return game.matchedIndices.count
+    }
+    
+    // TODO: do not hardcoding
+    var remainingCards: Int {
+        
+        return 81 - game.nextCardIndex
+    }
+    
     // MARK: - Intent(s)
     
     func new() {
@@ -27,10 +37,14 @@ class SetGameViewModel: ObservableObject {
     }
     
     func deal() {
-        game.deal()
+        game.dealNewCards()
     }
     
     func choose(card: SetGameModel.Card) {
         game.choose(card: card)
+    }
+    
+    func hint() {
+        game.hint()
     }
 }
