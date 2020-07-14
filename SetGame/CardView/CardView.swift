@@ -10,22 +10,6 @@ import SwiftUI
 struct CardView: View {
     var card: SetGameModel.Card
     
-    func getColor(_ cardColor: SetGameModel.CardFeature) -> Color {
-        switch cardColor {
-        case .featureA: return .blue
-        case .featureB: return .red
-        case .featureC: return .green
-        }
-    }
-    
-    func getNumber(_ cardNumber: SetGameModel.CardFeature) -> Int {
-        switch cardNumber {
-        case .featureA: return 1
-        case .featureB: return 2
-        case .featureC: return 3
-        }
-    }
-    
     var body: some View {
         GeometryReader { geo in
             ZStack(alignment: .center){

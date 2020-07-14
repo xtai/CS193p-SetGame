@@ -26,9 +26,9 @@ struct CardContent: View {
     
     private func getColor(_ cardColor: SetGameModel.CardFeature) -> Color {
         switch cardColor {
-        case .featureA: return .blue
+        case .featureA: return .green
         case .featureB: return .red
-        case .featureC: return .green
+        case .featureC: return .purple
         }
     }
     
@@ -54,10 +54,10 @@ struct CardContent: View {
         ZStack {
             switch card.shading {
             case .featureA: EmptyView() // open
-            case .featureB: StripedFillShape(lineHeight: height * 0.005).clipShape(content) // striped
+            case .featureB: StripedFillShape(lineHeight: height * 0.01).clipShape(content) // striped
             case .featureC: content // solid
             }
-            content.stroke(lineWidth: height * 0.01) // outline for everyone
+            content.stroke(lineWidth: height * 0.02) // outline for everyone
         }
     }
 }

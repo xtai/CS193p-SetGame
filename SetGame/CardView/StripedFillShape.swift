@@ -11,13 +11,17 @@ struct StripedFillShape: Shape {
     var lineHeight: CGFloat = 0.5
     // a striped fill
     func path(in rect: CGRect) -> Path {
-        let gap = lineHeight * 5
-        let numberOfLines: Int = Int(floor(rect.height / (gap + lineHeight)))
+        var realLineHeight = lineHeight
+        if realLineHeight < 0.1 {
+            realLineHeight = 0.1
+        }
+        let interval = realLineHeight * 5
+        let numberOfLines = Int(floor(rect.height / interval))
         
         var p = Path()
         for i in (0...numberOfLines) {
-            let startY = rect.minY + CGFloat(CGFloat(i) * (gap + lineHeight))
-            let endY = lineHeight + startY
+            let startY = rect.minY + CGFloat(CGFloat(i) * interval)
+            let endY = realLineHeight + startY
             
             p.move(to: CGPoint(x: rect.minX, y: startY))
             p.addLine(to: CGPoint(x: rect.minX, y: endY))
