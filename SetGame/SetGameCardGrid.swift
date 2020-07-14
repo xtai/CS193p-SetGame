@@ -16,11 +16,8 @@ struct SetGameCardGrid<Item, ItemView>: View where Item: Identifiable, ItemView:
         self.viewForItem = viewForItem
     }
     
-    private func getColumns(itemCount: Int, in size: CGSize) -> [GridItem]  {
-        // find the bestLayout
-        // i.e., one which results in cells whose aspectRatio
-        // has the smallestVariance from desiredAspectRatio
-        // not necessarily most optimal code to do this, but easy to follow (hopefully)
+    private func getColumns(itemCount: Int, itemAspectRatio: Double, in size: CGSize) -> [GridItem]  {
+        // find the best colunm count in LazyVGrid that fits all the cards
         var bestCols = 1
         var smallestVariance: Double?
         let desiredAspectRatio: Double = abs(Double(size.width/size.height))
@@ -28,8 +25,9 @@ struct SetGameCardGrid<Item, ItemView>: View where Item: Identifiable, ItemView:
             for cols in 1...itemCount {
                 let rows = (itemCount / cols) + (itemCount % cols > 0 ? 1 : 0)
                 if (rows - 1) * cols < itemCount {
-                    let itemAspectRatio = (5/6) * (Double(cols)/Double(rows))
-                    let variance = itemAspectRatio - desiredAspectRatio
+                    // this ignores the grid padding, but hopefullt it's okay
+                    let gridAspectRatio = itemAspectRatio * (Double(cols)/Double(rows))
+                    let variance = gridAspectRatio - desiredAspectRatio
                     if smallestVariance == nil || variance < smallestVariance! {
                         if variance > 0 {
                             smallestVariance = variance
@@ -46,13 +44,14 @@ struct SetGameCardGrid<Item, ItemView>: View where Item: Identifiable, ItemView:
         GeometryReader { geometry in
             VStack {
                 Spacer()
-                LazyVGrid(columns: getColumns(itemCount: items.count, in: geometry.size), spacing: 8) {
+                LazyVGrid(columns: getColumns(itemCount: items.count, itemAspectRatio: 1.4, in: geometry.size), spacing: 0) {
                     ForEach(items, id: \.id) { item in
                         viewForItem(item)
+                            .padding(.bottom, 10)
                     }
                 }
                 Spacer()
-            }.padding(8)
-        }
+            }
+        }.padding(10)
     }
 }

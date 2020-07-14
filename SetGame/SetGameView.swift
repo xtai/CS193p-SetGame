@@ -11,44 +11,77 @@ struct SetGameView: View {
     @ObservedObject var game: SetGameViewModel
     
     var body: some View {
+        VStack{
+            TopActionBar(game: game).padding()
+            SetGameCardGrid(game.cards) { card in
+                CardView(card: card).onTapGesture {
+                    withAnimation (.linear) {
+                        game.choose(card: card)
+                    }
+                }
+            }
+            BottomActionBar(game: game).padding()
+        }
+    }
+}
+
+struct BottomActionBar: View {
+    @ObservedObject var game: SetGameViewModel
+    
+    var body: some View {
         VStack {
             HStack {
-                Text("Set Game").font(.title)
+                Label("\(game.matchesInView)", systemImage: "rectangle.3.offgrid")
+                Label("\(game.remainingCards)", systemImage: "square.stack")
                 Spacer()
                 Button(action: {
                     withAnimation (.easeInOut) {
                         game.deal()
                     }
                 }, label: {
-                    Text("Deal 3 Cards")
-                })
-                Button(action: {
-                    withAnimation (.easeInOut) {
-                        game.new()
-                    }
-                }, label: {
-                    Text("New Game")
-                })
-            }.padding()
-            HStack {
-                Text("In View: \(game.cards.count)")
-                Text("Remaining: \(game.remainingCards)")
-                Spacer()
+                    Label("Deal Cards", systemImage: "die.face.3")
+                }).padding(.trailing, 10)
                 Button(action: {
                     withAnimation (.easeInOut) {
                         game.hint()
                     }
                 }, label: {
-                    Text("Hint")
+                    Label("Hint", systemImage: "questionmark.diamond")
                 })
-                Text("Matches: \(game.matchesInView)")
-            }.padding()
-            SetGameCardGrid(game.cards) { card in
-                SetGameCardView(card: card).onTapGesture {
-                    withAnimation (.linear) {
-                        game.choose(card: card)
-                    }
+            }
+        }
+    }
+}
+
+struct TopActionBar: View {
+    @State private var showingAlert = false
+    @ObservedObject var game: SetGameViewModel
+    
+    var body: some View {
+        HStack {
+            Button(action: {
+                withAnimation (.easeInOut) {
+                    game.deal()
                 }
+            }, label: {
+                Image(systemName: "person.2")
+            })
+            Text("Set Game").font(.title).bold()
+            Spacer()
+            Button(action: {
+                withAnimation (.easeInOut) {
+                    showingAlert = true
+                }
+            }, label: {
+                Label("New Game", systemImage: "plus.rectangle.on.rectangle")
+            }).alert(isPresented: $showingAlert) {
+                Alert(
+                    title: Text("Start a new game?"),
+                    primaryButton: .default(Text("New Game")) {
+                        game.new()
+                    },
+                    secondaryButton: .cancel()
+                )
             }
         }
     }

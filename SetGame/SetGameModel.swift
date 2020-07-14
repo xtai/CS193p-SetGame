@@ -12,6 +12,12 @@ struct SetGameModel {
     private(set) var matchedIndices: [[Int]] = [[]]
     private(set) var nextCardIndex: Int
     
+    var remainingCards: Int {
+        get {
+            81 - nextCardIndex
+        }
+    }
+    
     // TODO: find a better solution here for matched card and in view cards
     private var allCards: [Card]
     private var choosenCards: [Card]
@@ -72,7 +78,7 @@ struct SetGameModel {
         matchedIndices = findMatchIndices()
         print("matched \(cards.count)")
     }
-
+    
     mutating func dealNewCards() {
         if nextCardIndex + 2 < allCards.count {
             for index in (nextCardIndex..<nextCardIndex+3) {
@@ -101,16 +107,24 @@ struct SetGameModel {
     // FIXME: to have better hints iterator, using a closure?
     mutating func hint() {
         if matchedIndices.count > 0 {
-            for cardIndex in matchedIndices[0] {
+            for set in matchedIndices {
+                for cardIndex in set {
+                    cards[cardIndex].isHinted = false
+                }
+            }
+            let hintPairs = matchedIndices.randomElement()!
+            for cardIndex in hintPairs {
                 cards[cardIndex].isHinted = true
             }
         }
     }
     
     // TODO: find a more effiectent algorithm here
-    private func findMatchIndices() -> Array<Array<Int>> {
+    private mutating func findMatchIndices() -> Array<Array<Int>> {
         var matchSets = Array<Array<Int>>()
         let count = cards.count
+        // TODO: read more what's guard?
+        guard count >= 3 else { return matchSets }
         for indexA in (0..<(count - 2)) {
             for indexB in ((indexA + 1)..<(count - 1)) {
                 for indexC in ((indexB + 1)..<count) {
@@ -118,6 +132,12 @@ struct SetGameModel {
                         matchSets.append([indexA, indexB, indexC])
                     }
                 }
+            }
+        }
+        while matchSets.count == 0 {
+            dealNewCards()
+            if (nextCardIndex >= allCards.count) {
+                break
             }
         }
         return matchSets

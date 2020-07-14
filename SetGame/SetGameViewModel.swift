@@ -26,8 +26,7 @@ class SetGameViewModel: ObservableObject {
     
     // TODO: do not hardcoding
     var remainingCards: Int {
-        
-        return 81 - game.nextCardIndex
+        return game.remainingCards
     }
     
     // MARK: - Intent(s)
