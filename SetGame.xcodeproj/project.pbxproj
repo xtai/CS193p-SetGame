@@ -54,8 +54,8 @@
 		339FA47D24B9847D00E805D5 = {
 			isa = PBXGroup;
 			children = (
-				339FA48824B9847D00E805D5 /* SetGame */,
 				339FA48724B9847D00E805D5 /* Products */,
+				339FA48824B9847D00E805D5 /* SetGame */,
 			);
 			sourceTree = "<group>";
 		};
@@ -70,15 +70,15 @@
 		339FA48824B9847D00E805D5 /* SetGame */ = {
 			isa = PBXGroup;
 			children = (
-				33EDF86C24BCC83A003FAE1D /* CardView */,
 				339FA49224B9847D00E805D5 /* Info.plist */,
-				339FA49A24BA2F2900E805D5 /* SetGameModel.swift */,
 				335DB8B024BADFB00072695E /* Array+Identifiable.swift */,
 				339FA48924B9847D00E805D5 /* SetGameApp.swift */,
-				339FA48B24B9847D00E805D5 /* SetGameView.swift */,
 				3353E28724BA6C8300DB2BEE /* SetGameCardGrid.swift */,
+				339FA49A24BA2F2900E805D5 /* SetGameModel.swift */,
+				339FA48B24B9847D00E805D5 /* SetGameView.swift */,
 				339FA49C24BA2F3500E805D5 /* SetGameViewModel.swift */,
 				339FA48D24B9847D00E805D5 /* Assets.xcassets */,
+				33EDF86C24BCC83A003FAE1D /* CardView */,
 				339FA48F24B9847D00E805D5 /* Preview Content */,
 			);
 			path = SetGame;
@@ -95,11 +95,11 @@
 		33EDF86C24BCC83A003FAE1D /* CardView */ = {
 			isa = PBXGroup;
 			children = (
-				33EDF86D24BCC85F003FAE1D /* Dimond.swift */,
-				33FE00A024BD010E00392FFD /* Squiggle.swift */,
 				33FE00A224BD3F4100392FFD /* CardContent.swift */,
-				33EDF87324BCD081003FAE1D /* HStripe.swift */,
 				33EDF87524BCD47F003FAE1D /* CardView.swift */,
+				33EDF86D24BCC85F003FAE1D /* Dimond.swift */,
+				33EDF87324BCD081003FAE1D /* HStripe.swift */,
+				33FE00A024BD010E00392FFD /* Squiggle.swift */,
 			);
 			path = CardView;
 			sourceTree = "<group>";
