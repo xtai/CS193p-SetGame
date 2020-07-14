@@ -21,10 +21,12 @@ struct SetGameModel {
     // TODO: find a better solution here for matched card and in view cards
     private var allCards: [Card]
     private var choosenCards: [Card]
+    private var hintedCardSetIndex: Int?
     
     // choose a card
     mutating func choose(card: Card) {
         // if we have 3 choosen cards before, deselect all cards before choose the new card
+        unhintAllCards()
         if choosenCards.count == 3 {
             for card in choosenCards {
                 cards[cards.firstIndex(matching: card)!].isSelected = false
@@ -97,30 +99,46 @@ struct SetGameModel {
             return false
         } else if !isASet(a: cardA.shape, b: cardB.shape, c: cardC.shape) {
             return false
-        } else if !isASet(a: cardA.shading, b: cardB.shading, c: cardC.shading) {
+        } else if !isASet(a: cardA.fill, b: cardB.fill, c: cardC.fill) {
             return false
         } else {
             return true
         }
     }
     
-    // FIXME: to have better hints iterator, using a closure?
-    mutating func hint() {
-        if matchedIndices.count > 0 {
-            for set in matchedIndices {
-                for cardIndex in set {
-                    cards[cardIndex].isHinted = false
-                }
-            }
-            let hintPairs = matchedIndices.randomElement()!
-            for cardIndex in hintPairs {
-                cards[cardIndex].isHinted = true
+    mutating func unhintAllCards() {
+        for set in matchedIndices {
+            for cardIndex in set {
+                cards[cardIndex].isHinted = false
             }
         }
     }
     
-    // TODO: find a more effiectent algorithm here
+    // FIXME: to have better hints iterator, using a closure?
+    mutating func hint() {
+        if matchedIndices.count > 0 {
+            unhintAllCards()
+            switch hintedCardSetIndex {
+            case .none: hintedCardSetIndex = 0
+            case .some(let data):
+                if (data + 1 >= matchedIndices.count){
+                    hintedCardSetIndex = 0
+                } else {
+                    hintedCardSetIndex = data + 1
+                }
+            }
+            let hintPairs = matchedIndices[hintedCardSetIndex!]
+            for cardIndex in hintPairs {
+                cards[cardIndex].isHinted = true
+            }
+        } else {
+            hintedCardSetIndex = nil
+        }
+    }
+    
+    // FIXME: find a more effiectent algorithm here
     private mutating func findMatchIndices() -> Array<Array<Int>> {
+        hintedCardSetIndex = nil
         var matchSets = Array<Array<Int>>()
         let count = cards.count
         // TODO: read more what's guard?
@@ -168,8 +186,8 @@ struct SetGameModel {
         for number in CardFeature.allCases {
             for color in CardFeature.allCases {
                 for shape in CardFeature.allCases {
-                    for shading in CardFeature.allCases {
-                        allCards.append(Card(number: number, color: color, shape: shape, shading: shading))
+                    for fill in CardFeature.allCases {
+                        allCards.append(Card(number: number, color: color, shape: shape, fill: fill))
                     }
                 }
             }
@@ -184,7 +202,7 @@ struct SetGameModel {
         var number: CardFeature
         var color: CardFeature
         var shape: CardFeature
-        var shading: CardFeature
+        var fill: CardFeature
         var id = UUID()
         var isMatched: Bool = false
         var isSelected: Bool = false

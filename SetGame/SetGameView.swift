@@ -31,7 +31,6 @@ struct BottomActionBar: View {
     var body: some View {
         VStack {
             HStack {
-                Label("\(game.matchesInView)", systemImage: "rectangle.3.offgrid")
                 Label("\(game.remainingCards)", systemImage: "square.stack")
                 Spacer()
                 Button(action: {
@@ -46,7 +45,7 @@ struct BottomActionBar: View {
                         game.hint()
                     }
                 }, label: {
-                    Label("Hint", systemImage: "questionmark.diamond")
+                    Label("Hint (\(game.matchesInView))", systemImage: "questionmark.diamond")
                 })
             }
         }

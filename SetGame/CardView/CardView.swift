@@ -38,7 +38,7 @@ struct CardView: View {
                         .opacity(0.8)
                         .foregroundColor(.gray)
                 }
-                CardContent(card: card, height: geo.size.height).padding(geo.size.height * 0.025)
+                CardContent(card: card, cardHeight: geo.size.height).padding(geo.size.height * 0.025)
             }
         }.aspectRatio(1.5, contentMode: .fit)
     }
@@ -46,17 +46,17 @@ struct CardView: View {
 
 struct SetGameCardView_Previews: PreviewProvider {
     static var previews: some View {
-        CardView(card: SetGameModel.Card(number: .featureC, color: .featureA, shape: .featureA, shading: .featureA))
+        CardView(card: SetGameModel.Card(number: .featureC, color: .featureA, shape: .featureA, fill: .featureA))
             .previewLayout(.fixed(width: 300, height: 200))
-        CardView(card: SetGameModel.Card(number: .featureC, color: .featureB, shape: .featureB, shading: .featureA))
+        CardView(card: SetGameModel.Card(number: .featureC, color: .featureB, shape: .featureB, fill: .featureA))
             .previewLayout(.fixed(width: 300, height: 200))
-        CardView(card: SetGameModel.Card(number: .featureC, color: .featureC, shape: .featureC, shading: .featureA))
+        CardView(card: SetGameModel.Card(number: .featureC, color: .featureC, shape: .featureC, fill: .featureA))
             .previewLayout(.fixed(width: 300, height: 200))
-        CardView(card: SetGameModel.Card(number: .featureA, color: .featureA, shape: .featureA, shading: .featureB))
+        CardView(card: SetGameModel.Card(number: .featureA, color: .featureA, shape: .featureA, fill: .featureB))
             .previewLayout(.fixed(width: 300, height: 200))
-        CardView(card: SetGameModel.Card(number: .featureB, color: .featureB, shape: .featureB, shading: .featureB))
+        CardView(card: SetGameModel.Card(number: .featureB, color: .featureB, shape: .featureB, fill: .featureB))
             .previewLayout(.fixed(width: 300, height: 200))
-        CardView(card: SetGameModel.Card(number: .featureC, color: .featureC, shape: .featureC, shading: .featureB))
+        CardView(card: SetGameModel.Card(number: .featureC, color: .featureC, shape: .featureC, fill: .featureB))
             .previewLayout(.fixed(width: 300, height: 200))
     }
 }

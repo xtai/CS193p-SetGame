@@ -1,5 +1,5 @@
 //
-//  StripedFillShape.swift
+//  HStripe.swift
 //  SetGame
 //
 //  Created by Sean Tai on 7/13/20.
@@ -7,21 +7,21 @@
 
 import SwiftUI
 
-struct StripedFillShape: Shape {
-    var lineHeight: CGFloat = 0.5
+struct HStripe: Shape {
+    var stripeHeight: CGFloat = 0.5
     // a striped fill
     func path(in rect: CGRect) -> Path {
-        var realLineHeight = lineHeight
-        if realLineHeight < 0.1 {
-            realLineHeight = 0.1
+        var realStripeHeight = stripeHeight
+        if realStripeHeight < 0.1 {
+            realStripeHeight = 0.1
         }
-        let interval = realLineHeight * 5
+        let interval = realStripeHeight * 5
         let numberOfLines = Int(floor(rect.height / interval))
         
         var p = Path()
         for i in (0...numberOfLines) {
             let startY = rect.minY + CGFloat(CGFloat(i) * interval)
-            let endY = realLineHeight + startY
+            let endY = realStripeHeight + startY
             
             p.move(to: CGPoint(x: rect.minX, y: startY))
             p.addLine(to: CGPoint(x: rect.minX, y: endY))
@@ -35,6 +35,6 @@ struct StripedFillShape: Shape {
 
 struct CardShadingView_Previews: PreviewProvider {
     static var previews: some View {
-        StripedFillShape(lineHeight: 3.0).previewLayout(.fixed(width: 360, height: 300))
+        HStripe(stripeHeight: 3.0).previewLayout(.fixed(width: 360, height: 300))
     }
 }

@@ -9,16 +9,16 @@ import SwiftUI
 
 struct CardContent: View {
     var card: SetGameModel.Card
-    var height: CGFloat
+    var cardHeight: CGFloat
     
     var body: some View {
         HStack(spacing: 0) {
             Group {
                 ForEach(0..<getNumber(card.number), id: \.self) { _ in
-                    renderShape().aspectRatio(0.5, contentMode: .fit)
+                    renderShape().aspectRatio(symbolAspectRatio, contentMode: .fit)
                 }
-                .padding([.leading, .trailing], height * 0.056)
-                .padding([.top, .bottom], height * 0.17)
+                .padding([.leading, .trailing], size(of: paddingH))
+                .padding([.top, .bottom], size(of: paddingV))
             }
             .foregroundColor(getColor(card.color))
         }
@@ -43,21 +43,33 @@ struct CardContent: View {
     private func renderShape() -> some View {
         Group {
             switch card.shape {
-            case .featureA: renderShading(for: Dimond())
-            case .featureB: renderShading(for: Squiggle())
-            case .featureC: renderShading(for: Capsule())
+            case .featureA: renderFilling(for: Dimond())
+            case .featureB: renderFilling(for: Squiggle())
+            case .featureC: renderFilling(for: Capsule())
             }
         }
     }
     
-    private func renderShading<ContentView: Shape>(for content: ContentView) -> some View {
+    private func renderFilling<ContentView: Shape>(for content: ContentView) -> some View {
         ZStack {
-            switch card.shading {
+            switch card.fill {
             case .featureA: EmptyView() // open
-            case .featureB: StripedFillShape(lineHeight: height * 0.01).clipShape(content) // striped
+            case .featureB: HStripe(stripeHeight: size(of: stripedHeight)).clipShape(content) // striped
             case .featureC: content // solid
             }
-            content.stroke(lineWidth: height * 0.02) // outline for everyone
+            content.stroke(lineWidth: size(of: outline)) // outline for everyone
         }
     }
+    
+    // Drawing constants
+    private func size(of constant: CGFloat) -> CGFloat {
+        return constant * cardHeight
+    }
+    private let symbolAspectRatio: CGFloat = 0.5
+    private let paddingH: CGFloat = 0.056
+    private let paddingV: CGFloat = 0.17
+    private let stripedHeight: CGFloat = 0.01
+    private let outline: CGFloat = 0.02
+    
+    
 }
