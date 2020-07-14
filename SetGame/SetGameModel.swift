@@ -189,6 +189,7 @@ struct SetGameModel {
         var isMatched: Bool = false
         var isSelected: Bool = false
         var isHinted: Bool = false
+        var isFaceUp: Bool = true
     }
     
     enum CardFeature: CaseIterable {

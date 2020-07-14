@@ -1,5 +1,5 @@
 //
-//  DimondShape.swift
+//  Dimond.swift
 //  SetGame
 //
 //  Created by Sean Tai on 7/13/20.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct DimondShape: Shape {
+struct Dimond: Shape {
     func path(in rect: CGRect) -> Path {
         var p = Path()
         p.move(to: CGPoint(x: rect.midX, y: rect.minY))

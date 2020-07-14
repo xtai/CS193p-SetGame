@@ -8,10 +8,10 @@
 import SwiftUI
 
 struct StripedFillShape: Shape {
+    var lineHeight: CGFloat = 0.5
     // a striped fill
     func path(in rect: CGRect) -> Path {
-        let gap: CGFloat = 4.0
-        let lineHeight: CGFloat = 1.0
+        let gap = lineHeight * 5
         let numberOfLines: Int = Int(floor(rect.height / (gap + lineHeight)))
         
         var p = Path()
@@ -31,6 +31,6 @@ struct StripedFillShape: Shape {
 
 struct CardShadingView_Previews: PreviewProvider {
     static var previews: some View {
-        StripedFillShape().previewLayout(.fixed(width: 360, height: 300))
+        StripedFillShape(lineHeight: 3.0).previewLayout(.fixed(width: 360, height: 300))
     }
 }

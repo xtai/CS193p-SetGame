@@ -54,17 +54,7 @@ struct CardView: View {
                         .opacity(0.8)
                         .foregroundColor(.gray)
                 }
-                HStack(spacing: 0) {
-                    Group {
-                        ForEach(0..<getNumber(card.number), id: \.self) { _ in
-                            CardShapeView(shape: card.shape, shading: card.shading, stroke: geo.size.height * 0.01)
-                                .aspectRatio(0.5, contentMode: .fit)
-                        }
-                        .padding([.leading, .trailing], geo.size.height * 0.056)
-                        .padding([.top, .bottom], geo.size.height * 0.17)
-                    }
-                    .foregroundColor(getColor(card.color))
-                }
+                CardContent(card: card, height: geo.size.height).padding(geo.size.height * 0.025)
             }
         }.aspectRatio(1.5, contentMode: .fit)
     }
