@@ -12,7 +12,7 @@ struct SetGameModel {
     private(set) var matchedIndices: [[Int]] = [[]]
     private(set) var nextCardIndex: Int
     
-    var remainingCards: Int {
+    var remainingCardCount: Int {
         get {
             81 - nextCardIndex
         }
@@ -20,43 +20,42 @@ struct SetGameModel {
     
     // TODO: find a better solution here for matched card and in view cards
     private var allCards: [Card]
-    private var choosenCards: [Card]
+    private var chosenCards: [Card]
     private var hintedCardSetIndex: Int?
     
     // choose a card
     mutating func choose(card: Card) {
         // if we have 3 choosen cards before, deselect all cards before choose the new card
         unhintAllCards()
-        if choosenCards.count == 3 {
-            for card in choosenCards {
-                cards[cards.firstIndex(matching: card)!].isSelected = false
+        if chosenCards.count == 3 {
+            for card in chosenCards {
+                cards[cards.firstIndex(matching: card)!].isChosen = false
             }
-            choosenCards = Array<Card>()
+            chosenCards = Array<Card>()
         }
         
         // find the choosen card index in current cards
         let indexOfSelectedCard = cards.firstIndex(matching: card)!
         
         // if the choosen card is not selected
-        if !cards[indexOfSelectedCard].isSelected {
+        if !cards[indexOfSelectedCard].isChosen {
             // mark the card selected
-            choosenCards.append(card)
+            chosenCards.append(card)
             
             // toggle the card select state
-            cards[indexOfSelectedCard].isSelected.toggle()
+            cards[indexOfSelectedCard].isChosen.toggle()
             
             // if the choosen card is the third choosen card
-            if choosenCards.count == 3 {
-                print("Is it a match? \(isMatch(cardA: choosenCards[0], cardB: choosenCards[1], cardC: choosenCards[2]))")
-                if isMatch(cardA: choosenCards[0], cardB: choosenCards[1], cardC: choosenCards[2]) {
-                    saveMatchedCard(matchedCards: choosenCards)
-                    choosenCards = Array<Card>()
+            if chosenCards.count == 3 {
+                if isMatch(cardA: chosenCards[0], cardB: chosenCards[1], cardC: chosenCards[2]) {
+                    saveMatchedCard(matchedCards: chosenCards)
+                    chosenCards = Array<Card>()
                 }
             }
         } else {
-            choosenCards.remove(at: choosenCards.firstIndex(matching: card)!)
+            chosenCards.remove(at: chosenCards.firstIndex(matching: card)!)
             // toggle the card select state
-            cards[indexOfSelectedCard].isSelected.toggle()
+            cards[indexOfSelectedCard].isChosen.toggle()
         }
     }
     
@@ -136,7 +135,6 @@ struct SetGameModel {
         }
     }
     
-    // FIXME: find a more effiectent algorithm here
     private mutating func findMatchIndices() -> Array<Array<Int>> {
         hintedCardSetIndex = nil
         var matchSets = Array<Array<Int>>()
@@ -150,12 +148,6 @@ struct SetGameModel {
                         matchSets.append([indexA, indexB, indexC])
                     }
                 }
-            }
-        }
-        while matchSets.count == 0 {
-            dealNewCards()
-            if (nextCardIndex >= allCards.count) {
-                break
             }
         }
         return matchSets
@@ -181,7 +173,7 @@ struct SetGameModel {
     init() {
         cards = Array<Card>()
         allCards = Array<Card>()
-        choosenCards = Array<Card>()
+        chosenCards = Array<Card>()
         nextCardIndex = 12
         for number in CardFeature.allCases {
             for color in CardFeature.allCases {
@@ -205,7 +197,7 @@ struct SetGameModel {
         var fill: CardFeature
         var id = UUID()
         var isMatched: Bool = false
-        var isSelected: Bool = false
+        var isChosen: Bool = false
         var isHinted: Bool = false
         var isFaceUp: Bool = true
     }

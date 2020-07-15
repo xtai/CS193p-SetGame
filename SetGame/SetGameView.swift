@@ -11,18 +11,25 @@ struct SetGameView: View {
     @ObservedObject var game: SetGameViewModel
     
     var body: some View {
-        VStack{
-            TopActionBar(game: game).padding()
-            SetGameCardGrid(game.cards) { card in
-                CardView(card: card).onTapGesture {
-                    withAnimation (.linear) {
-                        game.choose(card: card)
-                    }
+        GeometryReader { geometry in
+            VStack{
+                TopActionBar(game: game).padding()
+                SetGameCardGrid(game.cards, itemRatio: cardRatio) { card in
+                    CardView(card)
+                        .onTapGesture {
+                        withAnimation (.linear) {
+                            game.choose(card: card)
+                        }
+                    }.aspectRatio(cardRatio, contentMode: .fit)
+                        .transition(AnyTransition.scale)
                 }
+                BottomActionBar(game: game).padding()
             }
-            BottomActionBar(game: game).padding()
         }
     }
+    
+    // MARK: - Drawing Constants
+    private let cardRatio: CGFloat = 1.5
 }
 
 struct BottomActionBar: View {
@@ -77,7 +84,9 @@ struct TopActionBar: View {
                 Alert(
                     title: Text("Start a new game?"),
                     primaryButton: .default(Text("New Game")) {
-                        game.new()
+                        withAnimation (.linear) {
+                            game.new()
+                        }
                     },
                     secondaryButton: .cancel()
                 )

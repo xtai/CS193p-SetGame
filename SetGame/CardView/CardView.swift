@@ -8,15 +8,19 @@
 import SwiftUI
 
 struct CardView: View {
-    var card: SetGameModel.Card
+    private var card: SetGameModel.Card
+    
+    init(_ card: SetGameModel.Card) {
+        self.card = card
+    }
     
     var body: some View {
         GeometryReader { geo in
-            ZStack(alignment: .center){
+            ZStack {
                 RoundedRectangle(cornerRadius: geo.size.height * 0.05)
                     .foregroundColor(.white)
                     .opacity(0.2)
-                if card.isSelected {
+                if card.isChosen {
                     RoundedRectangle(cornerRadius: geo.size.height * 0.05)
                         .stroke(lineWidth: geo.size.height * 0.02)
                         .padding(geo.size.height * 0.01)
@@ -38,25 +42,24 @@ struct CardView: View {
                         .opacity(0.8)
                         .foregroundColor(.gray)
                 }
-                CardContent(card: card, cardHeight: geo.size.height).padding(geo.size.height * 0.025)
-            }
-        }.aspectRatio(1.5, contentMode: .fit)
+                CardContent(of: card, cardHeight: geo.size.height).padding(geo.size.height * 0.025)
+                VStack {
+                    Text("\(geo.frame(in: CoordinateSpace.global).origin.x)")
+                    Text("\(geo.frame(in: CoordinateSpace.global).origin.y)")
+                }
+            }.transition(.scale)
+            //            .transition(.offset(x: -geo.frame(in: CoordinateSpace.global).origin.x, y: -geo.frame(in: CoordinateSpace.global).origin.y))
+        }
     }
 }
 
 struct SetGameCardView_Previews: PreviewProvider {
     static var previews: some View {
-        CardView(card: SetGameModel.Card(number: .featureC, color: .featureA, shape: .featureA, fill: .featureA))
-            .previewLayout(.fixed(width: 300, height: 200))
-        CardView(card: SetGameModel.Card(number: .featureC, color: .featureB, shape: .featureB, fill: .featureA))
-            .previewLayout(.fixed(width: 300, height: 200))
-        CardView(card: SetGameModel.Card(number: .featureC, color: .featureC, shape: .featureC, fill: .featureA))
-            .previewLayout(.fixed(width: 300, height: 200))
-        CardView(card: SetGameModel.Card(number: .featureA, color: .featureA, shape: .featureA, fill: .featureB))
-            .previewLayout(.fixed(width: 300, height: 200))
-        CardView(card: SetGameModel.Card(number: .featureB, color: .featureB, shape: .featureB, fill: .featureB))
-            .previewLayout(.fixed(width: 300, height: 200))
-        CardView(card: SetGameModel.Card(number: .featureC, color: .featureC, shape: .featureC, fill: .featureB))
-            .previewLayout(.fixed(width: 300, height: 200))
+        CardView(SetGameModel.Card(number: .featureC, color: .featureA, shape: .featureA, fill: .featureA)).previewLayout(.fixed(width: 300, height: 200))
+        CardView(SetGameModel.Card(number: .featureC, color: .featureB, shape: .featureB, fill: .featureA)).previewLayout(.fixed(width: 300, height: 200))
+        CardView(SetGameModel.Card(number: .featureC, color: .featureC, shape: .featureC, fill: .featureA)).previewLayout(.fixed(width: 300, height: 200))
+        CardView(SetGameModel.Card(number: .featureA, color: .featureA, shape: .featureA, fill: .featureB)).previewLayout(.fixed(width: 300, height: 200))
+        CardView(SetGameModel.Card(number: .featureB, color: .featureB, shape: .featureB, fill: .featureB)).previewLayout(.fixed(width: 300, height: 200))
+        CardView(SetGameModel.Card(number: .featureC, color: .featureC, shape: .featureC, fill: .featureB)).previewLayout(.fixed(width: 300, height: 200))
     }
 }
