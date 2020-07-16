@@ -21,12 +21,25 @@ class SetGameViewModel: ObservableObject {
     }
     
     var matchesInView: Int {
-        return game.matchedIndices.count
+        return game.availableHints
     }
     
-    // TODO: do not hardcoding
+    var playingCardCount: Int {
+        return game.nextPlayingCardIndex
+    }
+
     var remainingCards: Int {
         return game.remainingCardCount
+    }
+    
+    var dealDisabled: Bool {
+        if (game.remainingCardCount == 0) { return true }
+        else { return false }
+    }
+    
+    var hintDisabled: Bool {
+        if (game.availableHints == 0) { return true }
+        else { return false }
     }
     
     // MARK: - Intent(s)
@@ -36,7 +49,7 @@ class SetGameViewModel: ObservableObject {
     }
     
     func deal() {
-        game.dealNewCards()
+        game.deal()
     }
     
     func choose(card: SetGameModel.Card) {
