@@ -1,5 +1,5 @@
 //
-//  Home.swift
+//  SetGameHome.swift
 //  SetGame
 //
 //  Created by Sean Tai on 7/10/20.
@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-struct Home: View {
+struct SetGameHome: View {
     @ObservedObject var game: SetGameViewModel
     
     var body: some View {
@@ -21,14 +21,16 @@ struct Home: View {
                             Button(action: {
                                 withAnimation (.easeInOut) { game.choose(card: card) }
                             }) {
-                                CardView(card).transition(.offset(
-                                    x: ((geometry.size.width / 2) - (cardGeometry.size.width / 2) - cardGeometry.frame(in: CoordinateSpace.global).origin.x),
-                                    y: insertAnimationYOffest - geometry.size.height
-                                ))
+                                CardView(card)
+                                    .transition(AnyTransition.offset(
+                                        x: ((geometry.size.width / 2) - (cardGeometry.size.width / 2) - cardGeometry.frame(in: CoordinateSpace.global).origin.x),
+                                        y: insertAnimationYOffest - geometry.size.height
+                                    ).combined(with: .opacity))
+//                                    .animation(.easeInOut)
                             }
                         }.aspectRatio(cardRatio, contentMode: .fit)
-                        .transition(AnyTransition.asymmetric(insertion: .offset(x: 0, y: -geometry.size.height), removal: .offset(x: 0, y: geometry.size.height)))
-                        .animation(.easeInOut(duration: animationDuration))
+                        .transition(AnyTransition.asymmetric(insertion: .offset(x: 0, y: -geometry.size.height), removal: .offset(x: 0, y: geometry.size.height)).combined(with: .opacity))
+//                        .animation(.easeInOut)
                     }.padding([.leading, .trailing])
                     BottomActionBar(game: game, geometry: geometry)
                 }
@@ -46,7 +48,7 @@ struct Home: View {
 struct SetGameView_Previews: PreviewProvider {
     static var previews: some View {
         Group {
-            Home(game: SetGameViewModel()).previewDevice("iPhone 11")
+            SetGameHome(game: SetGameViewModel()).previewDevice("iPhone 11")
         }
     }
 }

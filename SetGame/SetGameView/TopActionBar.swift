@@ -18,7 +18,10 @@ struct TopActionBar: View {
             Button(action: {
                 withAnimation (.easeInOut) { showingAlert = true }
             }, label: {
-                Label("New Game", systemImage: "plus.square.on.square").padding()
+                HStack {
+                    Image(systemName: "plus.square.on.square")
+                    Text("New Game")
+                }.padding()
             }).alert(isPresented: $showingAlert) {
                 Alert(
                     title: Text("Start a new game?"),

@@ -4,7 +4,7 @@
 //
 //  Created by Sean Tai on 7/13/20.
 //
-//  Horizontal Striped Fill Shape
+//  Horizontal Stripes Shape
 
 import SwiftUI
 

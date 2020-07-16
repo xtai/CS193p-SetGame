@@ -4,6 +4,7 @@
 //
 //  Created by Sean Tai on 7/11/20.
 //
+//  Creating a card grid with LazyVGrid
 
 import SwiftUI
 

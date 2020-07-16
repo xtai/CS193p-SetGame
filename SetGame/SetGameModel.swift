@@ -20,15 +20,15 @@ struct SetGameModel {
     private(set) var nextPlayingCardIndex: Int = 0
     private(set) var gameFinished: Bool = false
     
-    
+    // MARK: - Private Variables
+
     private var matchedCardCount: Int = 0
-    
+
     private var chosenCards: [Card] = Array<Card>()
     private var wrongSetCards: [Card] = Array<Card>()
     private var hintedCards: [Card] = Array<Card>()
-    
-    private var potentialSets: [[Card]] = Array<Array<Card>>()
     private var hintingIndex: Int?
+    private var potentialSets: [[Card]] = Array<Array<Card>>()
     
     // MARK: - New Game
     init() {

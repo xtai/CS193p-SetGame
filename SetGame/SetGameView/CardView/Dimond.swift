@@ -4,6 +4,7 @@
 //
 //  Created by Sean Tai on 7/13/20.
 //
+//  Dimond Shape
 
 import SwiftUI
 
